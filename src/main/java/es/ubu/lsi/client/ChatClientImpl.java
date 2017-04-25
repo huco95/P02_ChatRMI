@@ -5,25 +5,29 @@ import java.rmi.RemoteException;
 import es.ubu.lsi.common.ChatMessage;
 
 public class ChatClientImpl implements ChatClient {
+	
+	private String nickname;
+	private int id;
 
+	public ChatClientImpl(String nickname){
+		this.nickname = nickname;
+	}
+	
 	public int getId() throws RemoteException {
-		// TODO Auto-generated method stub
-		return 0;
+		return id;
 	}
 
 	public void setId(int id) throws RemoteException {
-		// TODO Auto-generated method stub
-
+		this.id = id;
 	}
 
 	public void receive(ChatMessage msg) throws RemoteException {
-		// TODO Auto-generated method stub
-
+		System.out.println(msg.getNickname() + ">> " + msg.getMessage());
+		System.out.print("> ");
 	}
 
 	public String getNickName() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		return nickname;
 	}
 
 }

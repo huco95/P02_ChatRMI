@@ -22,4 +22,42 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  
+  	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<configuration>
+							<tasks>
+								<copy todir="../Pracitca2ChatRMI-Web/src/main/webapp">
+									<fileset dir="./target/classes">
+										<exclude name="**/*Dinamico.class" /> 
+									</fileset>
+								</copy>
+
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Si queremos empaquetar en un jar excluyendo clases. -->
+			 
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<includes>
+						<include>**/*Dinamico.*</include>
+					</includes>
+				</configuration>
+			</plugin>
+			
+		</plugins>
+	</build>
 </project>

@@ -5,8 +5,14 @@ import java.rmi.RemoteException;
 import es.ubu.lsi.client.ChatClient;
 import es.ubu.lsi.common.ChatMessage;
 
-public class ChatServerImpl implements ChatServer {
-
+public class ChatServerImpl implements ChatServer {	
+	/**
+	 * Registers a new client.
+	 * 
+	 * @param client client
+	 * @return client id
+	 * @throws RemoteException remote error
+	 */
 	public int checkIn(ChatClient client) throws RemoteException {
 		// TODO Auto-generated method stub
 		return 0;
