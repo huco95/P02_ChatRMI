@@ -26,8 +26,13 @@ public class ChatClientStarter {
 		String host = "localhost";
 		ChatClientImpl client = null;
 		ChatServerImpl server = null;
-
-		if (args.length == 1) {
+		Scanner sc = new Scanner(System.in);
+				
+		if (args.length == 0) {
+			System.out.print("Introduce tu nombre de usuario: ");
+			nickname = sc.nextLine();
+			System.out.println();			
+		} else if (args.length == 1) {
 			// Si solo se introduce el nombre de usuario.
 			nickname = args[0];
 		} else if (args.length == 2) {
@@ -36,7 +41,7 @@ public class ChatClientStarter {
 			host = args[1];
 		} else {
 			// Si se introducen 0 o mas de 2 argumentos se cierra el cliente.
-			System.out.println("Introduce el nombre de usuario y opcionalmente el nombre del host.");
+			System.out.println("Debes introducir el nombre de usuario y opcionalmente el nombre del host.");
 			System.out.println("Saliendo del cliente.");
 			System.exit(0);
 		}
@@ -86,8 +91,8 @@ public class ChatClientStarter {
 		System.out.println("\t- UNBAN + \"username\"");
 		System.out.println("\t- LOGOUT");
 		System.out.println("--------------------------------------------");
-
-		Scanner sc = new Scanner(System.in);
+		
+		sc = new Scanner(System.in);
 		String read;
 		boolean stop = false;
 
