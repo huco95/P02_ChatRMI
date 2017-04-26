@@ -9,82 +9,110 @@ import java.util.Scanner;
 import es.ubu.lsi.common.ChatMessage;
 import es.ubu.lsi.server.ChatServerImpl;
 
+/**
+ * Inicia el proceso de exportación del cliente remoto y de la resolución del
+ * servidor de chat remoto. Recibe las entradas de texto e invoca los metodos
+ * remotos del servidor.
+ * 
+ * @author Felix Nogal
+ * @author Mario Santamaria
+ *
+ */
 public class ChatClientStarter {
 
 	public ChatClientStarter(String[] args) {
+
 		String nickname = null;
 		String host = "localhost";
-		ChatClientImpl client;
+		ChatClientImpl client = null;
 		ChatServerImpl server = null;
 
 		if (args.length == 1) {
+			// Si solo se introduce el nombre de usuario.
 			nickname = args[0];
 		} else if (args.length == 2) {
+			// Si se introduce el nombre de usuario y el host.
 			nickname = args[0];
 			host = args[1];
 		} else {
-			System.out.println("Introduce el nombre de usuario.");
+			// Si se introducen 0 o mas de 2 argumentos se cierra el cliente.
+			System.out.println("Introduce el nombre de usuario y opcionalmente el nombre del host.");
+			System.out.println("Saliendo del cliente.");
 			System.exit(0);
 		}
 
-		client = new ChatClientImpl(nickname);
+		// Creamos un nuevo cliente con el nombre de usuario.
+		try {
+			client = new ChatClientImpl(nickname);
+		} catch (RemoteException e) {
+			System.out.println("Se ha producido un error al iniciar el cliente.");
+			System.out.println("Saliendo del cliente.");
+			System.exit(0);
+		}
+
+		// Obtenemos el objeto remoto del servidor.
 		try {
 			server = (ChatServerImpl) Naming.lookup("rmi://" + host + "/ChatServerImpl");
 		} catch (MalformedURLException e) {
-			System.err.println("Error al obtener la referencia remota del Servidor");
-			e.printStackTrace();
+			System.out.println("Se ha producido un error al iniciar el servidor.");
+			System.out.println("Saliendo del cliente.");
+			System.exit(0);
 		} catch (RemoteException e) {
-			System.err.println("Error al obtener la referencia remota del Servidor");
-			e.printStackTrace();
+			System.out.println("Se ha producido un error al iniciar el servidor.");
+			System.out.println("Saliendo del cliente.");
+			System.exit(0);
 		} catch (NotBoundException e) {
-			System.err.println("Error al obtener la referencia remota del Servidor");
-			e.printStackTrace();
+			System.out.println("Se ha producido un error al iniciar el servidor.");
+			System.out.println("Saliendo del cliente.");
+			System.exit(0);
 		}
-		
+
+		// Enlazamos el cliente y el servidor.
 		try {
 			server.checkIn(client);
-		} catch (RemoteException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (RemoteException e) {
+			System.out.println("Se produjo un error al iniciar el cliente.");
+			System.out.println("Saliendo del cliente.");
+			System.exit(0);
 		}
+
 		
 		System.out.println("--------------------------------------------");
 		System.out.println("               BIENVENIDO");
 		System.out.println("--------------------------------------------");
 		System.out.println("Logeado como \"" + nickname + "\"");
 		System.out.println("Comandos para banear, unbanear y salir:");
-
 		System.out.println("\t- BAN + \"username\"");
 		System.out.println("\t- UNBAN + \"username\"");
 		System.out.println("\t- LOGOUT");
 		System.out.println("--------------------------------------------");
 
-		boolean stop = false;
-		String read;
 		Scanner sc = new Scanner(System.in);
-		while(!stop){
+		String read;
+		boolean stop = false;
+
+		while (!stop) {
+			
 			System.out.print("> ");
 			read = sc.nextLine();
-			if (read.equals("logout")){
+			
+			if (read.toLowerCase().equals("logout")) {
 				try {
+					stop = true;
 					server.logout(client);
 				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println("Se ha producido un error al intentar desconectar el cliente.");
 				}
-				sc.close();
-				stop = true;
-			}else{
+			} else {
 				try {
 					server.publish(new ChatMessage(client.getId(), read));
 				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println("Se ha producido un error al intentar enviar el mensaje.");
 				}
 			}
 		}
 		
-
+		sc.close();
+		System.out.println("Cliente desconectado.");
 	}
-
 }
