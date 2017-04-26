@@ -31,7 +31,8 @@ public class ChatClientStarter {
 		if (args.length == 0) {
 			System.out.print("Introduce tu nombre de usuario: ");
 			nickname = sc.nextLine();
-			System.out.println();			
+			System.out.println();
+			sc.close();
 		} else if (args.length == 1) {
 			// Si solo se introduce el nombre de usuario.
 			nickname = args[0];
