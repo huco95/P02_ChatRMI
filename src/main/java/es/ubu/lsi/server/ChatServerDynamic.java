@@ -1,6 +1,5 @@
 package es.ubu.lsi.server;
 
-import java.rmi.RMISecurityManager;
 import java.rmi.server.RMIClassLoader;
 import java.util.Properties;
 
@@ -21,7 +20,7 @@ public class ChatServerDynamic {
 
 		try {
 			if (System.getSecurityManager() == null) {
-				System.setSecurityManager(new RMISecurityManager());
+				System.setSecurityManager(new SecurityManager());
 			}
 			Properties p = System.getProperties();
 			// lee el codebase
