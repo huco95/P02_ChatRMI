@@ -34,6 +34,7 @@ public class ChatClientImpl extends UnicastRemoteObject implements ChatClient {
 	 * @throws RemoteException
 	 */
 	public ChatClientImpl(String nickname) throws RemoteException{
+		super();
 		this.nickname = nickname;
 	}
 	
