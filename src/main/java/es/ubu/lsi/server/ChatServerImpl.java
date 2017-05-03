@@ -43,7 +43,7 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServer {
 		clientes.add(client);
 		System.out.println("\nSe ha conectado un nuevo cliente:");
 		System.out.println("\t- USERNAME: " + client.getNickName() + "\n");
-		publish(new ChatMessage(numClientes, "El usuario " + client.getNickName() + " se ha conectado."));
+		publish(new ChatMessage(numClientes, "admin", "El usuario " + client.getNickName() + " se ha conectado."));
 		return numClientes;
 	}
 
@@ -71,7 +71,12 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServer {
 	 * @see ChatServer#publish(ChatMessage)
 	 */
 	public void publish(ChatMessage msg) throws RemoteException {
-		System.out.println("--- " + msg.getNickname() + " envió: " + msg.getMessage());
+		if(msg.getNickname().equals("admin")){
+			System.out.println("### " + msg.getMessage());
+		}else{
+			System.out.println("--- " + msg.getNickname() + " envió: " + msg.getMessage());
+		}
+
 		for (ChatClient receptor : clientes) {
 			if(receptor.getId() != msg.getId()){
 				receptor.receive(msg);
