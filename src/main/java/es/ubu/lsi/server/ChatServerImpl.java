@@ -3,6 +3,8 @@ package es.ubu.lsi.server;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import es.ubu.lsi.client.ChatClient;
@@ -26,11 +28,17 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServer {
 	private int numClientes;
 
 	/**
+	 * Informacion de los clientes baneados.
+	 */
+	private HashMap<Integer, HashSet<String>> baneados;
+
+	/**
 	 * Constructor del servidor.
 	 */
 	public ChatServerImpl() throws RemoteException {
 		super();
 		clientes = new ArrayList<ChatClient>();
+		baneados = new HashMap<Integer, HashSet<String>>();
 		numClientes = 0;
 	}
 
@@ -71,16 +79,35 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServer {
 	 * @see ChatServer#publish(ChatMessage)
 	 */
 	public void publish(ChatMessage msg) throws RemoteException {
-		if(msg.getNickname().equals("admin")){
+		if (msg.getNickname().equals("admin")) {
 			System.out.println("### " + msg.getMessage());
-		}else{
+		} else {
 			System.out.println("--- " + msg.getNickname() + " envió: " + msg.getMessage());
 		}
 
 		for (ChatClient receptor : clientes) {
-			if(receptor.getId() != msg.getId()){
+			if (receptor.getId() != msg.getId()) {
 				receptor.receive(msg);
 			}
+		}
+	}
+
+	/**
+	 * @see ChatServer#ban(ChatMessage)
+	 */
+	public void ban(ChatMessage msg) throws RemoteException {
+		if (baneados.containsKey(msg.getId())) {
+			HashSet<String> users = new HashSet<String>();
+			users = baneados.get(msg.getId());
+			users.add(msg.getMessage());
+			baneados.put(msg.getId(), users);
+			System.out.println("### " + baneados);
+
+		} else {
+			HashSet<String> users = new HashSet<String>();
+			users.add(msg.getMessage());
+			baneados.put(msg.getId(), users);
+			System.out.println("### " + baneados);
 		}
 	}
 

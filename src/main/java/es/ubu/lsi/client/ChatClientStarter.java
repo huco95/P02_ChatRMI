@@ -100,7 +100,9 @@ public class ChatClientStarter {
 			
 			System.out.print("> ");
 			read = sc.nextLine();
-			
+			String[] banCommand = read.split(" ");
+
+			// -----------------OPCION LOGAUT---------------------
 			if (read.toLowerCase().equals("logout")) {
 				try {
 					stop = true;
@@ -108,7 +110,18 @@ public class ChatClientStarter {
 				} catch (RemoteException e) {
 					System.out.println("Se ha producido un error al intentar desconectar el cliente.");
 				}
-			} else {
+			// -----------------OPCION BAN---------------------
+			}else if (banCommand[0].equals("ban") && banCommand.length == 2){
+				try {
+					server.ban(new ChatMessage(client.getId(), client.getNickName(), banCommand[1]));
+				} catch (RemoteException e) {
+					System.out.println("Se ha producido un error al intentar banear al usuario.");
+				}
+				
+			// -----------------OPCION UNBAN---------------------
+			} else if (banCommand.equals("unban") && banCommand.length == 2) {
+			
+			} else {	
 				try {
 					server.publish(new ChatMessage(client.getId(), client.getNickName(), read));
 				} catch (RemoteException e) {
