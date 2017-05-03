@@ -33,7 +33,7 @@ public class ChatClientImpl extends UnicastRemoteObject implements ChatClient {
 	 * @param nickname el nombre de usuario
 	 * @throws RemoteException
 	 */
-	public ChatClientImpl(String nickname) throws RemoteException{
+	public ChatClientImpl(String nickname) throws RemoteException {
 		super();
 		this.nickname = nickname;
 	}
