@@ -29,6 +29,7 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServer {
 	 * Constructor del servidor.
 	 */
 	public ChatServerImpl() throws RemoteException {
+		super();
 		clientes = new ArrayList<ChatClient>();
 		numClientes = 0;
 	}

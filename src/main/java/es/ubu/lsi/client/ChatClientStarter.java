@@ -55,20 +55,21 @@ public class ChatClientStarter {
 			System.out.println("Saliendo del cliente.");
 			System.exit(0);
 		}
-
+		
 		// Obtenemos el objeto remoto del servidor.
 		try {
+			System.out.println("Conectando con el servidor...");
 			server = (ChatServerImpl) Naming.lookup("rmi://" + host + "/ChatServerImpl");
 		} catch (MalformedURLException e) {
-			System.out.println("Se ha producido un error al iniciar el servidor.");
+			System.out.println("Se ha producido un error al conectar con el servidor.");
 			System.out.println("Saliendo del cliente.");
 			System.exit(0);
 		} catch (RemoteException e) {
-			System.out.println("Se ha producido un error al iniciar el servidor.");
+			System.out.println("Se ha producido un error al conectar con el servidor.");
 			System.out.println("Saliendo del cliente.");
 			System.exit(0);
 		} catch (NotBoundException e) {
-			System.out.println("Se ha producido un error al iniciar el servidor.");
+			System.out.println("Se ha producido un error al conectar con el servidor.");
 			System.out.println("Saliendo del cliente.");
 			System.exit(0);
 		}
