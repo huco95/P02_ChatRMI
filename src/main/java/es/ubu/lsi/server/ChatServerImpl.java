@@ -51,8 +51,8 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServer {
 	 * @see ChatServer#logout(ChatClient)
 	 */
 	public void logout(ChatClient client) throws RemoteException {
-		clientes.remove(client);
 		publish(new ChatMessage(numClientes, "El usuario " + client.getNickName() + " se ha desconectado."));
+		clientes.remove(client);
 	}
 
 	/**
