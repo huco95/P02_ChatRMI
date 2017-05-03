@@ -7,7 +7,7 @@ import java.rmi.RemoteException;
 import java.util.Scanner;
 
 import es.ubu.lsi.common.ChatMessage;
-import es.ubu.lsi.server.ChatServerImpl;
+import es.ubu.lsi.server.ChatServer;
 
 /**
  * Inicia el proceso de exportación del cliente remoto y de la resolución del
@@ -25,14 +25,13 @@ public class ChatClientStarter {
 		String nickname = null;
 		String host = "localhost";
 		ChatClientImpl client = null;
-		ChatServerImpl server = null;
+		ChatServer server = null;
 		Scanner sc = new Scanner(System.in);
 				
 		if (args.length == 0) {
 			System.out.print("Introduce tu nombre de usuario: ");
 			nickname = sc.nextLine();
 			System.out.println();
-			sc.close();
 		} else if (args.length == 1) {
 			// Si solo se introduce el nombre de usuario.
 			nickname = args[0];
@@ -59,7 +58,7 @@ public class ChatClientStarter {
 		// Obtenemos el objeto remoto del servidor.
 		try {
 			System.out.println("Conectando con el servidor...");
-			server = (ChatServerImpl) Naming.lookup("rmi://" + host + "/ChatServerImpl");
+			server = (ChatServer) Naming.lookup("rmi://" + host + "/ChatServerImpl");
 		} catch (MalformedURLException e) {
 			System.out.println("Se ha producido un error al conectar con el servidor.");
 			System.out.println("Saliendo del cliente.");
@@ -94,7 +93,6 @@ public class ChatClientStarter {
 		System.out.println("\t- LOGOUT");
 		System.out.println("--------------------------------------------");
 		
-		sc = new Scanner(System.in);
 		String read;
 		boolean stop = false;
 
@@ -112,7 +110,7 @@ public class ChatClientStarter {
 				}
 			} else {
 				try {
-					server.publish(new ChatMessage(client.getId(), read));
+					server.publish(new ChatMessage(client.getId(), client.getNickName(), read));
 				} catch (RemoteException e) {
 					System.out.println("Se ha producido un error al intentar enviar el mensaje.");
 				}
@@ -121,5 +119,6 @@ public class ChatClientStarter {
 		
 		sc.close();
 		System.out.println("Cliente desconectado.");
+		System.exit(1);
 	}
 }

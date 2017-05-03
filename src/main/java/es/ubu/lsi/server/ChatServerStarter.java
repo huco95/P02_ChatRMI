@@ -7,8 +7,7 @@ public class ChatServerStarter {
 
 	public ChatServerStarter(){
 		try {
-			ChatServerImpl server = new ChatServerImpl();
-			Naming.rebind("/ChatServerImpl", server);
+			Naming.rebind("/ChatServerImpl", new ChatServerImpl());
 	        System.out.println("Servidor registrado...");
 		} catch (Exception e) {
 			System.err.println("Excepcion en arranque del servidor " + e.toString());

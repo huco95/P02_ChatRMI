@@ -71,6 +71,7 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServer {
 	 * @see ChatServer#publish(ChatMessage)
 	 */
 	public void publish(ChatMessage msg) throws RemoteException {
+		System.out.println("--- " + msg.getNickname() + " envió: " + msg.getMessage());
 		for (ChatClient receptor : clientes) {
 			if(receptor.getId() != msg.getId()){
 				receptor.receive(msg);
