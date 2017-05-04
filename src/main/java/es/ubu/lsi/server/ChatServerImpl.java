@@ -49,9 +49,7 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServer {
 		numClientes++;
 		client.setId(numClientes);
 		clientes.add(client);
-		System.out.println("\nSe ha conectado un nuevo cliente:");
-		System.out.println("\t- USERNAME: " + client.getNickName() + "\n");
-		publish(new ChatMessage(numClientes, "admin", "El usuario " + client.getNickName() + " se ha conectado."));
+		publish(new ChatMessage(numClientes, "admin", "El usuario \"" + client.getNickName() + "\" se ha conectado."));
 		return numClientes;
 	}
 
@@ -59,8 +57,8 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServer {
 	 * @see ChatServer#logout(ChatClient)
 	 */
 	public void logout(ChatClient client) throws RemoteException {
-		publish(new ChatMessage(numClientes, "El usuario " + client.getNickName() + " se ha desconectado."));
 		clientes.remove(client);
+		publish(new ChatMessage(numClientes,"admin", "El usuario \"" + client.getNickName() + "\" se ha desconectado."));
 	}
 
 	/**
@@ -86,7 +84,8 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServer {
 		}
 
 		for (ChatClient receptor : clientes) {
-			if (receptor.getId() != msg.getId()) {
+			if (!(receptor.getId() == msg.getId() || (baneados.containsKey(receptor.getId())
+					&& baneados.get(receptor.getId()).contains(msg.getNickname())))) {
 				receptor.receive(msg);
 			}
 		}
@@ -101,13 +100,35 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServer {
 			users = baneados.get(msg.getId());
 			users.add(msg.getMessage());
 			baneados.put(msg.getId(), users);
-			System.out.println("### " + baneados);
-
+			System.out.println("### " + msg.getNickname() + " baneó a " + msg.getMessage());
+			privatemsg(msg.getNickname(), new ChatMessage(0, "admin",
+					"El usuario \"" + msg.getMessage() + "\" ha sido añadido a la lista de baneados."));
 		} else {
 			HashSet<String> users = new HashSet<String>();
 			users.add(msg.getMessage());
 			baneados.put(msg.getId(), users);
-			System.out.println("### " + baneados);
+			System.out.println("### " + msg.getNickname() + " baneó a " + msg.getMessage());
+			privatemsg(msg.getNickname(), new ChatMessage(0, "admin",
+					"El usuario \"" + msg.getMessage() + "\" ha sido añadido a la lista de baneados."));
+		}
+	}
+
+	/**
+	 * @see ChatServer#unban(ChatMessage)
+	 */
+	public void unban(ChatMessage msg) throws RemoteException {
+		if (baneados.containsKey(msg.getId())) {
+			HashSet<String> users = new HashSet<String>();
+			users = baneados.get(msg.getId());
+			if (users.remove(msg.getMessage())) {
+				baneados.put(msg.getId(), users);
+				System.out.println(
+						"### " + msg.getNickname() + " eliminó a " + msg.getMessage() + " de la lista de baneados.");
+				privatemsg(msg.getNickname(), new ChatMessage(0, "admin",
+						"El usuario \"" + msg.getMessage() + "\" ha sido eliminado de la lista de baneados."));
+			} else {
+				privatemsg(msg.getNickname(), new ChatMessage(0, "admin", "El usuario indicado no existe."));
+			}
 		}
 	}
 

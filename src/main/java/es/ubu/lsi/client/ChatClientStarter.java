@@ -119,8 +119,12 @@ public class ChatClientStarter {
 				}
 				
 			// -----------------OPCION UNBAN---------------------
-			} else if (banCommand.equals("unban") && banCommand.length == 2) {
-			
+			} else if (banCommand[0].equals("unban") && banCommand.length == 2) {
+				try {
+					server.unban(new ChatMessage(client.getId(), client.getNickName(), banCommand[1]));
+				} catch (RemoteException e) {
+					System.out.println("Se ha producido un error al intentar unbanear al usuario.");
+				}
 			} else {	
 				try {
 					server.publish(new ChatMessage(client.getId(), client.getNickName(), read));
@@ -131,7 +135,7 @@ public class ChatClientStarter {
 		}
 		
 		sc.close();
-		System.out.println("Cliente desconectado.");
+		System.out.println("### Cliente desconectado.");
 		System.exit(1);
 	}
 }
