@@ -31,7 +31,7 @@ public class ChatClientImpl extends UnicastRemoteObject implements ChatClient {
 	 * Constructor de ChatClient.
 	 * 
 	 * @param nickname el nombre de usuario
-	 * @throws RemoteException
+	 * @throws RemoteException if remote communication has problems
 	 */
 	public ChatClientImpl(String nickname) throws RemoteException {
 		super();
@@ -40,6 +40,7 @@ public class ChatClientImpl extends UnicastRemoteObject implements ChatClient {
 	
 	/**
 	 * @see ChatClient#getId()
+	 * @throws RemoteException if remote communication has problems
 	 */
 	public int getId() throws RemoteException {
 		return id;
@@ -47,6 +48,7 @@ public class ChatClientImpl extends UnicastRemoteObject implements ChatClient {
 
 	/**
 	 * @see ChatClient#setId(int)
+	 * @throws RemoteException if remote communication has problems
 	 */
 	public void setId(int id) throws RemoteException {
 		this.id = id;
@@ -54,6 +56,7 @@ public class ChatClientImpl extends UnicastRemoteObject implements ChatClient {
 
 	/**
 	 * @see ChatClient#receive(ChatMessage)
+	 * @throws RemoteException if remote communication has problems
 	 */
 	public void receive(ChatMessage msg) throws RemoteException {
 		System.out.println(msg.getNickname() + ">> " + msg.getMessage());
@@ -62,6 +65,7 @@ public class ChatClientImpl extends UnicastRemoteObject implements ChatClient {
 
 	/**
 	 * @see ChatClient#getNickName()
+	 * @throws RemoteException if remote communication has problems
 	 */
 	public String getNickName() throws RemoteException {
 		return nickname;
